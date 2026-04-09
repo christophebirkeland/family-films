@@ -130,6 +130,66 @@
   .modal-unsupported { padding: 2rem; text-align: center; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.75rem; display: none; }
   .modal-unsupported a { color: var(--accent); text-decoration: none; }
 
+  /* ── Password gate ── */
+  .pw-gate {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 1.5rem;
+  }
+  .pw-gate.active { display: flex; }
+  .pw-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2.5rem 2rem;
+    width: 320px;
+    display: flex; flex-direction: column; gap: 1rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  .pw-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--accent2);
+    font-style: italic;
+    text-align: center;
+  }
+  .pw-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 0.6rem 0.9rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .pw-input:focus { border-color: var(--accent); }
+  .pw-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    color: #000;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.6rem;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.15s;
+    width: 100%;
+  }
+  .pw-btn:hover { background: var(--accent2); }
+  .pw-error {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--danger);
+    text-align: center;
+    min-height: 1rem;
+  }
+
   /* ── Toast ── */
   .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--card); border: 1px solid var(--accent); border-radius: var(--radius); padding: 0.6rem 1.1rem; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); z-index: 2000; opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateY(0); }
@@ -141,12 +201,24 @@
 </head>
 <body>
 
+<!-- Password gate -->
+<div class="pw-gate" id="pw-gate">
+  <div class="pw-box">
+    <div class="pw-title">Family <em>Film</em> Archive</div>
+    <input type="password" class="pw-input" id="pw-input"
+           placeholder="Enter password…"
+           onkeydown="if(event.key==='Enter') checkPassword()">
+    <button class="pw-btn" onclick="checkPassword()">Enter</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+
 <header>
   <div class="logo">Family <span>Film</span> Archive</div>
   <div class="header-stats">
     <span><b>9</b> eras</span>
     <span><b>30</b> videos</span>
-    <span title="Generated April 10, 2026 at 00:07 — re-run setup_onedrive.py to update after adding new videos.">Generated April 10, 2026 at 00:07</span>
+    <span title="Generated April 10, 2026 at 00:27 — re-run setup_onedrive.py to update after adding new videos.">Generated April 10, 2026 at 00:27</span>
   </div>
   <div class="header-tools">
     <button class="tool-btn primary" onclick="exportDescriptions()">⬇ Export descriptions</button>
@@ -210,13 +282,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 11",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0111.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0111.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0111_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0111_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0111_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0111_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0111_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0111_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0111_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0111_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0111_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0111_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -226,13 +298,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 21 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0121-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0121-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -242,13 +314,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 31 \u00b7 Tracks 5",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0131-5.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0131-5.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0131-5_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0131-5_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0131-5_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0131-5_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972 1-4/2008-01-0131-5_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0131-5_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0131-5_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0131-5_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0131-5_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1965-1972%201-4/2008-01-0131-5_preview_5.jpg?token=ChristopheErGenial"
         ]
       }
     ]
@@ -265,13 +337,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 11 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0111-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0111-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0111-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0111-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0111-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0111-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0111-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0111-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0111-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0111-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0111-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0111-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -281,13 +353,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 21 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0121-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0121-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -297,13 +369,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 61 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0161-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0161-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0161-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0161-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0161-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0161-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0161-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0161-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0161-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0161-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0161-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0161-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -313,13 +385,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 71 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0171-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0171-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0171-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0171-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0171-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0171-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1968 1970-1971/2008-01-0171-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0171-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0171-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0171-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0171-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1968%201970-1971/2008-01-0171-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       }
     ]
@@ -407,13 +479,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 11 \u00b7 Tracks 2",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3011-2.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3011-2.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3011-2_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3011-2_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3011-2_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3011-2_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3011-2_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3011-2_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3011-2_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3011-2_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3011-2_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3011-2_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -423,13 +495,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 21 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3021-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3021-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3021-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3021-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3021-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3021-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3021-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3021-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3021-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3021-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3021-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3021-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -439,13 +511,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 31 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3031-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3031-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3031-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3031-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3031-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3031-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970 8-9-10/2026-03-3031-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3031-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3031-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3031-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3031-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1969-1970%208-9-10/2026-03-3031-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       }
     ]
@@ -604,13 +676,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 11 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0111-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0111-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0111-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0111-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0111-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0111-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0111-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0111-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0111-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0111-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0111-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0111-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -620,13 +692,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 21 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0121-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0121-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -636,13 +708,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 61 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0161-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0161-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0161-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0161-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0161-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0161-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1978 25-27/2008-01-0161-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0161-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0161-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0161-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0161-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1978%2025-27/2008-01-0161-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       }
     ]
@@ -698,13 +770,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 11 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0111-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0111-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0111-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0111-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0111-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0111-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0111-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0111-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0111-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0111-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0111-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0111-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -714,13 +786,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 21 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0121-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0121-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0121-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0121-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0121-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0121-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0121-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       },
       {
@@ -730,13 +802,13 @@ const LIBRARY = [
         "format": "MP4",
         "label": "Disc 51 \u00b7 Tracks 3",
         "duration": null,
-        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0151-3.mp4?token=ChristopheErGenial",
+        "video_url": "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0151-3.mp4?token=ChristopheErGenial",
         "preview_urls": [
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0151-3_preview_1.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0151-3_preview_2.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0151-3_preview_3.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0151-3_preview_4.jpg?token=ChristopheErGenial",
-          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980 23-24/2008-01-0151-3_preview_5.jpg?token=ChristopheErGenial"
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0151-3_preview_1.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0151-3_preview_2.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0151-3_preview_3.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0151-3_preview_4.jpg?token=ChristopheErGenial",
+          "https://family-films-stream.christophe-birkeland.workers.dev/1979-1980%2023-24/2008-01-0151-3_preview_5.jpg?token=ChristopheErGenial"
         ]
       }
     ]
@@ -1021,9 +1093,49 @@ function importDescriptions(event) {
   reader.readAsText(file);
 }
 
+// ── Password gate ────────────────────────────────────────────────────────────
+const PW_HASH = "dbe34d27ca2748527741c1e8fa912e170a012942a0138c6cd25c636d1abc201b";
+const PW_KEY  = "family_films_auth";
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest("SHA-256",
+    new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf))
+    .map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function checkPassword() {
+  const input = document.getElementById("pw-input").value;
+  const hash  = await sha256(input);
+  if (hash === PW_HASH) {
+    sessionStorage.setItem(PW_KEY, hash);
+    showApp();
+  } else {
+    document.getElementById("pw-error").textContent = "Incorrect password";
+    document.getElementById("pw-input").value = "";
+    document.getElementById("pw-input").focus();
+  }
+}
+
+function showApp() {
+  document.getElementById("pw-gate").classList.remove("active");
+  renderSidebar(LIBRARY);
+  renderLibrary(LIBRARY);
+}
+
 // ── Boot — render immediately, no auth needed ─────────────────────────────────
-renderSidebar(LIBRARY);
-renderLibrary(LIBRARY);
+if (PW_HASH) {
+  // Check if already authenticated this session
+  if (sessionStorage.getItem(PW_KEY) === PW_HASH) {
+    showApp();
+  } else {
+    document.getElementById("pw-gate").classList.add("active");
+    setTimeout(() => document.getElementById("pw-input").focus(), 100);
+  }
+} else {
+  renderSidebar(LIBRARY);
+  renderLibrary(LIBRARY);
+}
 </script>
 </body>
 </html>
